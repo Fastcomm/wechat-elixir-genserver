@@ -36,7 +36,9 @@ Wechat API wrapper in Elixir.
 ## Usage
 
 * send_text_message
+  ```elixir
   Wechat.send_text_message(:my_genserver, open_id, text)
+  ```
 
 ## Plug
 
