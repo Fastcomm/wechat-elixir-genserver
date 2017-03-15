@@ -14,13 +14,13 @@ Wechat API wrapper in Elixir.
     end
     ```
 
-2. Ensure `wechat` is started before your application:
+2. Dont start `wechat` in mix file
 
-    ```elixir
-    def application do
-      [applications: [:wechat]]
-    end
-    ```
+3. Start a GenServer (Or start multiple with different account info) with the offical account info:
+    wechat_config_data = %Wechat.ConfigData{appid: my_official_appid,
+                                            secret: my_official_secret,
+                                            token_file: "/choose/a/temp/location/"} #Default is /tmp/access_token
+    Wechat.start(:my_genserver, wechat_config_data)
 
 ## Config
 
@@ -28,46 +28,14 @@ Wechat API wrapper in Elixir.
 
     ```elixir
     config :wechat, Wechat,
-      appid: "wechat app id",
-      secret: "wechat app secret",
       token: "wechat token",
-      encoding_aes_key: "32bits key" # 只有"兼容模式"和"安全模式"才需要配置这个值
+      encoding_aes_key: "32bits key"
     ```
 
 ## Usage
 
-* access_token
-
-    ```elixir
-    iex> Wechat.access_token
-"Bgw6_cMvFrE3hY3J8U6oglhvlzHhMpAQma0Wjam4XsLx8F6XP4pfZzsezBdpfth2BNAdUK6wA23S7D3fSePt7meG9a1gf9LhEmXjxGelnTjJLaIQMYumrCHE_9gcFVXaHIHcAGACDC"
-    ```
-
-* user
-
-    ```elixir
-    iex> Wechat.User.list
-    %{count: 4,
-    data: %{openid: ["oi00OuFrmNEC-QMa0Kikycq6A7ys",
-     "oi00OuKAhA8bm5okpaIDs7WmUZr4", "oi00OuOdjK0TicVUmovudbSP5Zq4",
-     "oi00OuBgG2mko_pOukCy00EYCwo4"]},
-    next_openid: "oi00OuBgG2mko_pOukCy00EYCwo4", total: 4}
-
-    iex> Wechat.User.info("oi00OuKAhA8bm5okpaIDs7WmUZr4")
-    %{city: "宝山", country: "中国", groupid: 0,
-    headimgurl: "http://wx.qlogo.cn/mmopen/7raJSSs9gLVJibia6sAXRvr8jajXfQFWiagrLwrRIZjMHCEXOxYf6nflxcpl4WkT7gz8Sa4tO32avnI0dlNLn24yA/0",
-    language: "zh_CN", nickname: "小爆炸的爸爸",
-    openid: "oi00OuKAhA8bm5okpaIDs7WmUZr4", province: "上海", remark: "",
-    sex: 1, subscribe: 1, subscribe_time: 1449812483, tagid_list: [],
-    unionid: "o2oUsuOUzgNL-JSLtIp8b3FzkI-M"}
-    ```
-
-* media
-
-    ```elixir
-    iex> file = Wechat.Media.download("GuSq91L0FXQFOIFtKwX2i5UPXH9QKnnu63_z4JHZwIw3TMIn1C-xm8hX3nPWCA")
-   iex> File.write!('/tmp/file', file)
-    ```
+* send_text_message
+  Wechat.send_text_message(:my_genserver, open_id, text)
 
 ## Plug
 
