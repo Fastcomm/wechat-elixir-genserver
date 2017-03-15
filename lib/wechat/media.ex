@@ -5,7 +5,7 @@ defmodule Wechat.Media do
 
   import Wechat.ApiFile
 
-  def download(media_id) do
-    get "media/get", media_id: media_id
+  def download(access_token, media_id) do
+    get "media/get", %{media_id: media_id , access_token: access_token}
   end
 end

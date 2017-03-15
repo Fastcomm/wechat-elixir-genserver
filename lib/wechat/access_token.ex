@@ -5,10 +5,10 @@ defmodule Wechat.AccessToken do
 
   import Wechat.ApiBase
 
-  def token do
-    get "token",
-      grant_type: "client_credential",
-      appid: Wechat.config[:appid],
-      secret: Wechat.config[:secret]
+  def token(config_data) do
+    get config_data, "token",
+      [ grant_type: "client_credential",
+      appid: config_data.appid,
+      secret: config_data.secret ]
   end
 end

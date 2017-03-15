@@ -5,35 +5,35 @@ defmodule Wechat.Message.Custom do
   ref: http://mp.weixin.qq.com/wiki/11/c88c270ae8935291626538f9c64bd123.html#.E5.AE.A2.E6.9C.8D.E6.8E.A5.E5.8F.A3-.E5.8F.91.E6.B6.88.E6.81.AF
   """
   import Wechat.ApiBase
+  require Logger
 
   @api_path "message/custom/send"
   @types ~w(text image voice video music news mpnews wxcard)
 
-  def send_text(openid, content) do
+  def send_text(config_data, open_id, content) do
     message =
       "text"
       |> build_message(%{"content" => content})
-
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_image(openid, media_id) do
+  def send_image(config_data, open_id, media_id) do
     message =
       "image"
       |> build_message(%{"media_id" => media_id})
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_voice(openid, media_id) do
+  def send_voice(config_data, open_id, media_id) do
     message =
       "voice"
       |> build_message(%{"media_id" => media_id})
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_video(openid, media_id, thumb_media_id, opts \\ []) do
+  def send_video(config_data, open_id, media_id, thumb_media_id, opts \\ []) do
     title = Keyword.get(opts, :title)
     description = Keyword.get(opts, :description)
 
@@ -46,10 +46,10 @@ defmodule Wechat.Message.Custom do
                        "description" => description
                      })
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_music(openid, musicurl, hqmusicurl, thumb_media_id, opts \\ []) do
+  def send_music(config_data, open_id, musicurl, hqmusicurl, thumb_media_id, opts \\ []) do
     title = Keyword.get(opts, :title)
     description = Keyword.get(opts, :description)
 
@@ -63,27 +63,44 @@ defmodule Wechat.Message.Custom do
                        "thumb_media_id" => thumb_media_id
                      })
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
   @news_max_articles 8
-  def send_news(openid, articles) when length(articles) <= @news_max_articles do
+  def send_news(config_data, open_id, articles) when length(articles) <= @news_max_articles do
     message =
       "news"
       |> build_message(%{"articles" => articles})
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_mpnews(openid, media_id) do
+  def send_mpnews(config_data, open_id, media_id) do
     message =
       "mpnews"
       |> build_message(%{"media_id" => media_id})
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
-  def send_wxcard(openid, card_id, card_ext) do
+  def send_mpnews(config_data, open_id, label, url) do
+    message = %{
+                "touser": open_id,
+                "msgtype": "news",
+                "news": %{
+                    "articles": [
+                      %{
+                          "title": "Image received",
+                          "url": url,
+                          "picurl": url
+                      }
+                      ]
+                }
+              }
+    deliver(config_data, open_id, message)
+  end
+
+  def send_wxcard(config_data, open_id, card_id, card_ext) do
     message =
       "wxcard"
       |> build_message(%{
@@ -91,7 +108,7 @@ defmodule Wechat.Message.Custom do
                        "card_ext" => card_ext
                      })
 
-    deliver(openid, message)
+    deliver(config_data, open_id, message)
   end
 
   defp build_message(type, content) when type in @types do
@@ -101,11 +118,11 @@ defmodule Wechat.Message.Custom do
     }
   end
 
-  defp deliver(openid, body) when is_map body do
+  defp deliver(config_data, open_id, body) when is_map body do
     body =
       body
-      |> Map.merge(%{"touser" => openid})
+      |> Map.merge(%{"touser" => open_id})
 
-    post @api_path, body
+    post config_data, @api_path, body
   end
 end

@@ -5,15 +5,15 @@ defmodule Wechat.User do
 
   import Wechat.ApiBase
 
-  def list do
-    get "user/get"
+  def list(config_data) do
+    get config_data, "user/get"
   end
 
-  def list(next_openid) do
-    get "user/get", next_openid: next_openid
+  def list(config_data, next_openid) do
+    get config_data, "user/get", next_openid: next_openid
   end
 
-  def info(openid) do
-    get "user/info", openid: openid
+  def info(config_data, openid) do
+    get config_data, "user/info", openid: openid
   end
 end

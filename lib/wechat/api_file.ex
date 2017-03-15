@@ -5,11 +5,12 @@ defmodule Wechat.ApiFile do
 
   use HTTPoison.Base
   alias HTTPoison.Response
+  require Logger
 
   @base_url "http://file.api.weixin.qq.com/cgi-bin/"
 
   def process_url(path) do
-    @base_url <> path <> ~s(&access_token=#{Wechat.access_token})
+    @base_url <> path
   end
 
   def process_response(%Response{headers: headers, body: body}) do
@@ -22,6 +23,8 @@ defmodule Wechat.ApiFile do
   end
 
   def get(path, params \\ []) do
+   # path = path <> ~s(&access_token=#{access_token})
+    Logger.warn "params: #{inspect params}"
     __MODULE__.get!(path, [], params: params)
     |> process_response
   end
