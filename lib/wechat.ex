@@ -11,20 +11,20 @@ defmodule Wechat do
       GenServer.start_link(__MODULE__, config_data , name: String.to_atom("#{name}"))
   end
 
-  def send_text_message(pid, to_wechat_id, message) do
-    GenServer.cast(pid, {:send_text_message, to_wechat_id, message})
+  def send_text_message(pid, user_open_id, message) do
+    GenServer.cast(pid, {:send_text_message, user_open_id, message})
   end
 
-  def send_news_message(pid, to_wechat_id, type, url) do
-    GenServer.cast(pid, {:send_news_message, {to_wechat_id, type, url}})
+  def send_news_message(pid, user_open_id, type, url) do
+    GenServer.cast(pid, {:send_news_message, {user_open_id, type, url}})
   end
 
   def send_image_message(pid, media_id) do
     GenServer.cast(pid, {:send_image_message, media_id})
   end
 
-  def user_info(pid, consumer_wechat_id) do
-    GenServer.call(pid, {:user_info, consumer_wechat_id})
+  def user_info(pid, user_open_id) do
+    GenServer.call(pid, {:user_info, user_open_id})
   end
 
   def download_file(pid, media_id) do
@@ -40,23 +40,23 @@ defmodule Wechat do
      {:reply, access_token, config_data}
   end
 
-  def handle_call({:user_info, consumer_wechat_id}, from, config_data) do
-    result = Wechat.User.info(config_data, consumer_wechat_id)
+  def handle_call({:user_info, user_open_id}, from, config_data) do
+    result = Wechat.User.info(config_data, user_open_id)
     {:reply, result, config_data}
   end
 
-  def handle_cast({:send_text_message, to_wechat_id, message}, config_data) do
-    Wechat.Message.Custom.send_text(config_data, to_wechat_id, message)
+  def handle_cast({:send_text_message, user_open_id, message}, config_data) do
+    Wechat.Message.Custom.send_text(config_data, user_open_id, message)
     {:noreply, config_data}
   end
 
-  def handle_cast({:send_image_message, to_wechat_id, media_id}, config_data) do
-    Wechat.Message.Custom.send_image(config_data, to_wechat_id, media_id)
+  def handle_cast({:send_image_message, user_open_id, media_id}, config_data) do
+    Wechat.Message.Custom.send_image(config_data, user_open_id, media_id)
     {:noreply, config_data}
   end
 
-  def handle_cast({:send_news_message, {consumer_wechat_id, type, url}}, config_data) do
-    Wechat.Message.Custom.send_mpnews(config_data, consumer_wechat_id, type, url)
+  def handle_cast({:send_news_message, {user_open_id, type, url}}, config_data) do
+    Wechat.Message.Custom.send_mpnews(config_data, user_open_id, type, url)
     {:noreply, config_data}
   end
 
