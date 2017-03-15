@@ -17,11 +17,12 @@ Wechat API wrapper in Elixir.
 2. Dont start `wechat` in mix file
 
 3. Start a GenServer (Or start multiple with different account info) with the offical account info:
+    ```elixir
     wechat_config_data = %Wechat.ConfigData{appid: my_official_appid,
                                             secret: my_official_secret,
                                             token_file: "/choose/a/temp/location/"} #Default is /tmp/access_token
     Wechat.start(:my_genserver, wechat_config_data)
-
+    ```
 ## Config
 
 * Add config in `config.exs`
