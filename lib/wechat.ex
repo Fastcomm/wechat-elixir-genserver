@@ -6,7 +6,7 @@ defmodule Wechat do
   require Logger
 
   @spec start(binary(), Wechat.ConfigData) :: any()
-  def start(name, config_data, register_global \\ false) do
+  def start_link(name, config_data, register_global \\ false) do
       Logger.info "Start wechat lib genserver, name: #{name}"
       if register_global do
         GenServer.start_link(__MODULE__, config_data, name: {:global, name})
