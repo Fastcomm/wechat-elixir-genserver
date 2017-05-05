@@ -6,9 +6,13 @@ defmodule Wechat do
   require Logger
 
   @spec start(binary(), Wechat.ConfigData) :: any()
-  def start(name, config_data) do
+  def start(name, config_data, register_global \\ false) do
       Logger.info "Start wechat lib genserver, name: #{name}"
-      GenServer.start_link(__MODULE__, config_data , name: String.to_atom("#{name}"))
+      if register_global do
+        GenServer.start_link(__MODULE__, config_data, name: {:global, name})
+      else
+        GenServer.start_link(__MODULE__, config_data , name: String.to_atom("#{name}"))
+      end
   end
 
   def send_text_message(pid, user_open_id, message) do
