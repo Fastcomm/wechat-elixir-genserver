@@ -31,7 +31,7 @@ defmodule Wechat.Mixfile do
   defp deps do
     [{:ex_doc, ">= 0.0.0", only: :dev},
      {:plug, "~> 1.0"},
-     {:poison, "~> 2.0"},
+     {:poison, "~> 3.0"},
      {:httpoison, "~> 0.9.0"},
      {:floki, "~> 0.9.0"}]
   end
