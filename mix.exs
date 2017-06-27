@@ -32,7 +32,7 @@ defmodule Wechat.Mixfile do
     [{:ex_doc, ">= 0.0.0", only: :dev},
      {:plug, "~> 1.0"},
      {:poison, "~> 3.0"},
-     {:httpoison, "~> 0.9.0"},
+     {:httpoison, "~> 0.11.2"},
      {:floki, "~> 0.9.0"}]
   end
 
